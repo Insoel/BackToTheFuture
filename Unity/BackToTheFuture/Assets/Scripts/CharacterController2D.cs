@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController2D : MonoBehaviour
+[RequireComponent(typeof(Rigidbody2D))]
+public abstract class CharacterController2D : MonoBehaviour
 {
-	private void Update()
+	protected Rigidbody2D rb;
+
+	[SerializeField] protected float moveSpeed = 2f;
+
+	protected virtual void Awake()
 	{
-		Move(transform.position + new Vector3(0.1f, 0f));
+		rb = GetComponent<Rigidbody2D>();
 	}
 
-	protected virtual void Move(Vector2 newPos)
-	{
-		transform.position = newPos;
-	}
+	protected abstract void Move(Vector2 newPos);
 }
