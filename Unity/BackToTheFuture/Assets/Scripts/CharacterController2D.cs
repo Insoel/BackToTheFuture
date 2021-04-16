@@ -8,6 +8,7 @@ public abstract class CharacterController2D : MonoBehaviour
 	protected Rigidbody2D rb;
 
 	[SerializeField] protected float moveSpeed = 2f;
+	[SerializeField] protected float jumpForce = 400f;
 
 	protected virtual void Awake()
 	{

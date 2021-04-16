@@ -15,8 +15,9 @@ public class PlayerController2D : CharacterController2D
 	private void UpdateMovement()
 	{
 		Vector2 movement = new Vector2();
-		movement.x = Input.GetAxis("Horizontal") * moveSpeed;		
-		movement.y = Input.GetAxis("Vertical") * moveSpeed;				
+		movement.x = Input.GetAxis("Horizontal") * moveSpeed;
+		movement.y = rb.velocity.y;
+		if (Input.GetAxis("Vertical") > 0f) rb.AddForce(new Vector2(0f, jumpForce));
 
 		if (movement != Vector2.zero) Move(movement);
 	}
