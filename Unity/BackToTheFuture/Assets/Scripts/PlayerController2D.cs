@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PlayerController2D : CharacterController2D
 {
-
 	private void Update()
 	{
 		UpdateMovement();
@@ -18,12 +17,9 @@ public class PlayerController2D : CharacterController2D
 		movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed;
 		movement.y = rb.velocity.y;
 
-		if (movement.x != 0f)
-		{
-			Move(movement);
-		}
+		Move(movement);
 		
-		if (Input.GetAxis("Vertical") > 0f && isGrounded)
+		if (Input.GetButtonDown("Jump") && isGrounded)
 		{
 			isGrounded = false;
 			rb.AddForce(new Vector2(0f, jumpForce));

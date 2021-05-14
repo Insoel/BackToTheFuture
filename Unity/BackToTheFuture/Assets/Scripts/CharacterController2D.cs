@@ -19,7 +19,7 @@ public abstract class CharacterController2D : MonoBehaviour
 
 	protected bool isGrounded = true;
 
-	const float GROUNDED_RADIUS = 0.1f;
+	const float GROUNDED_RADIUS = 0.05f;
 
 	protected virtual void Awake()
 	{
@@ -43,7 +43,7 @@ public abstract class CharacterController2D : MonoBehaviour
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundChecker.position, GROUNDED_RADIUS, groundLayer);
 		for (int i = 0; i < colliders.Length; i++)
 		{
-			if (colliders[i].gameObject != gameObject)
+			if (colliders[i].gameObject != gameObject && rb.velocity.y < 0.1f)
 				isGrounded = true;
 		}
 	}
