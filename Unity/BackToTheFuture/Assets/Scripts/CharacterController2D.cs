@@ -57,6 +57,6 @@ public abstract class CharacterController2D : MonoBehaviour
 	private void OnDrawGizmosSelected()
 	{
 		Gizmos.color = Color.red;
-		Gizmos.DrawCube(groundChecker.position, groundedSize)
+		Gizmos.DrawCube(groundChecker.position, groundedSize);
 	}
 }
