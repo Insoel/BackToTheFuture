@@ -19,11 +19,17 @@ public abstract class CharacterController2D : MonoBehaviour
 
 	protected bool isGrounded = true;
 
-	const float GROUNDED_RADIUS = 0.05f;
+	const float GROUNDED_SIZE_Y = 0.1f;
+
+	private Collider2D col;
+
+	private Vector2 groundedSize;
 
 	protected virtual void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
+		col = GetComponent<Collider2D>();
+		groundedSize = new Vector2(col.bounds.size.x, GROUNDED_SIZE_Y);
 	}
 
 	protected virtual void FixedUpdate()
@@ -39,8 +45,8 @@ public abstract class CharacterController2D : MonoBehaviour
 	private void UpdateGroundCollision()
 	{
 		isGrounded = false;
-
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundChecker.position, GROUNDED_RADIUS, groundLayer);
+		
+		Collider2D[] colliders = Physics2D.OverlapBoxAll(groundChecker.position, groundedSize, 0f);
 		for (int i = 0; i < colliders.Length; i++)
 		{
 			if (colliders[i].gameObject != gameObject && rb.velocity.y < 0.1f)
@@ -51,6 +57,6 @@ public abstract class CharacterController2D : MonoBehaviour
 	private void OnDrawGizmosSelected()
 	{
 		Gizmos.color = Color.red;
-		Gizmos.DrawSphere(groundChecker.position, GROUNDED_RADIUS);
+		Gizmos.DrawCube(groundChecker.position, groundedSize)
 	}
 }

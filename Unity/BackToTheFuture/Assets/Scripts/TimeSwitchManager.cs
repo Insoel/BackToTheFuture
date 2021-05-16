@@ -23,6 +23,7 @@ public class TimeSwitchManager : MonoBehaviour
         pastObject.SetActive(true);
         presentObject.SetActive(false);
         timeSwapCooldown = 5f;
+        currentTime = CurrentTime.Past;
     }
 
     // Update is called once per frame
