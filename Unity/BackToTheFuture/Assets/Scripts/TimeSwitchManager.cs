@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TimeSwitchManager : MonoBehaviour
 {
@@ -30,6 +28,7 @@ public class TimeSwitchManager : MonoBehaviour
     void Update()
     {
         timeSwapCooldown -= Time.deltaTime;
+        timeSwapCooldown = Mathf.Clamp(timeSwapCooldown, 0f, 5f);
 
         if (Input.GetKeyDown(swapTimeKeybind) &&  timeSwapCooldown <= 0f)
 		{

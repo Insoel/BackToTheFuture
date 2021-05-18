@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController2D : CharacterController2D
 {
-	private void Update()
+	[SerializeField] private KeyCode interactKey = KeyCode.E;
+
+	protected override void Update()
 	{
 		UpdateMovement();
+		base.Update();
 	}
 
 	// Gets the user input and moves/jumps the player along that axis.
@@ -24,5 +24,20 @@ public class PlayerController2D : CharacterController2D
 			isGrounded = false;
 			rb.AddForce(new Vector2(0f, jumpForce));
 		}
+
+		if (Input.GetKeyDown(interactKey))
+		{
+			Collider2D[] colliders = Physics2D.OverlapBoxAll(col.bounds.center, col.bounds.size, 0f);
+			for (int i = 0; i < colliders.Length; i++)
+			{
+				if (colliders[i].CompareTag("PuzzlePiece"))
+				{
+					PuzzlePiece piece = colliders[i].GetComponent<PuzzlePiece>();
+					piece.HasBeenInteracted = true;
+					break;
+				}
+			}
+		}
+		
 	}
 }

@@ -1,11 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class CharacterController2D : MonoBehaviour
 {
 	protected Rigidbody2D rb;
+
+	protected Animator animator;
+
+	protected SpriteRenderer sr;
 
 
 	[Header("Movement Values")]
@@ -21,7 +25,7 @@ public abstract class CharacterController2D : MonoBehaviour
 
 	const float GROUNDED_SIZE_Y = 0.1f;
 
-	private Collider2D col;
+	protected Collider2D col;
 
 	private Vector2 groundedSize;
 
@@ -29,7 +33,14 @@ public abstract class CharacterController2D : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody2D>();
 		col = GetComponent<Collider2D>();
+		animator = GetComponent<Animator>();
+		sr = GetComponent<SpriteRenderer>();
 		groundedSize = new Vector2(col.bounds.size.x, GROUNDED_SIZE_Y);
+	}
+
+	protected virtual void Update()
+	{
+		UpdateAnimations();
 	}
 
 	protected virtual void FixedUpdate()
@@ -46,12 +57,21 @@ public abstract class CharacterController2D : MonoBehaviour
 	{
 		isGrounded = false;
 		
-		Collider2D[] colliders = Physics2D.OverlapBoxAll(groundChecker.position, groundedSize, 0f);
+		Collider2D[] colliders = Physics2D.OverlapBoxAll(groundChecker.position, groundedSize, 0f, groundLayer);
 		for (int i = 0; i < colliders.Length; i++)
 		{
 			if (colliders[i].gameObject != gameObject && rb.velocity.y < 0.1f)
 				isGrounded = true;
 		}
+	}
+
+	private void UpdateAnimations()
+	{
+		float velX = rb.velocity.x;
+		if (velX < 0f && !sr.flipX) sr.flipX = true;
+		else if (velX > 0f && sr.flipX) sr.flipX = false;
+
+		animator.SetFloat("VelX", Mathf.Abs(velX));
 	}
 
 	private void OnDrawGizmosSelected()
