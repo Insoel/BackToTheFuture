@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class TimeSwitchManager : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class TimeSwitchManager : MonoBehaviour
     [SerializeField] private GameObject pastObject = default;
     [SerializeField] private GameObject presentObject = default;
     [SerializeField] private float timeSwapCooldown = 5f;
+    [SerializeField] private TextMeshProUGUI cooldownTimerText = default;
+    [SerializeField] private Image cooldownImage = default;
 
     private CurrentTime currentTime = CurrentTime.Past;
     
@@ -20,7 +24,7 @@ public class TimeSwitchManager : MonoBehaviour
     {
         pastObject.SetActive(true);
         presentObject.SetActive(false);
-        timeSwapCooldown = 5f;
+        timeSwapCooldown = 0f;
         currentTime = CurrentTime.Past;
     }
 
@@ -29,6 +33,10 @@ public class TimeSwitchManager : MonoBehaviour
     {
         timeSwapCooldown -= Time.deltaTime;
         timeSwapCooldown = Mathf.Clamp(timeSwapCooldown, 0f, 5f);
+        cooldownTimerText.text = timeSwapCooldown.ToString("0");
+        float percent = timeSwapCooldown / 5f;
+        percent = 1f - percent;
+        cooldownImage.fillAmount = percent;
 
         if (Input.GetKeyDown(swapTimeKeybind) &&  timeSwapCooldown <= 0f)
 		{
