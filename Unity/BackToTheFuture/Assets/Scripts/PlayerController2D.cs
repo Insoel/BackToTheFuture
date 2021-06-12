@@ -40,4 +40,10 @@ public class PlayerController2D : CharacterController2D
 		}
 		
 	}
+
+	private void OnDisable()
+	{
+		Move(new Vector2(0, rb.velocity.y));
+		animator.SetFloat("VelX", 0f);
+	}
 }

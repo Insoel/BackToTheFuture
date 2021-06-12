@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using System;
+using UnityEngine;
 
 public class TimeSwitchManager : MonoBehaviour
 {
@@ -16,6 +15,8 @@ public class TimeSwitchManager : MonoBehaviour
     [SerializeField] private float timeSwapCooldown = 1f;
 
     private CurrentTime currentTime = CurrentTime.Past;
+
+    public event Action OnTimeSwap;
     
     // Start is called before the first frame update
     void Start()
@@ -34,6 +35,7 @@ public class TimeSwitchManager : MonoBehaviour
 
         if (Input.GetKeyDown(swapTimeKeybind) &&  timeSwapCooldown <= 0f)
 		{
+            OnTimeSwap?.Invoke();
             switch(currentTime)
 			{
                 case CurrentTime.Past:

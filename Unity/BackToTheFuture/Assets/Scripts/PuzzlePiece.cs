@@ -15,6 +15,7 @@ public class PuzzlePiece : MonoBehaviour, IInteractableDialogue
 
 	public event Action<Dialogue, GameObject> OnInteraction;
 	public event Action<Dialogue> OnStopInteraction;
+	public event Action OnActionInteraction;
 	public Dialogue Dialogue { get => dialogue; }
 
 	public bool HasBeenInteracted
@@ -28,6 +29,7 @@ public class PuzzlePiece : MonoBehaviour, IInteractableDialogue
 				hasBeenInteracted = value;
 				GetComponent<Collider2D>().enabled = false;
 				sprite.enabled = false;
+				OnActionInteraction?.Invoke();
 			}
 		}
 	}
