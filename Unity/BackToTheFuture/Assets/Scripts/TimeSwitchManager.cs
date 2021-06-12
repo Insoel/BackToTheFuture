@@ -13,9 +13,7 @@ public class TimeSwitchManager : MonoBehaviour
     [SerializeField] private KeyCode swapTimeKeybind = KeyCode.T;
     [SerializeField] private GameObject pastObject = default;
     [SerializeField] private GameObject presentObject = default;
-    [SerializeField] private float timeSwapCooldown = 5f;
-    [SerializeField] private TextMeshProUGUI cooldownTimerText = default;
-    [SerializeField] private Image cooldownImage = default;
+    [SerializeField] private float timeSwapCooldown = 1f;
 
     private CurrentTime currentTime = CurrentTime.Past;
     
@@ -32,11 +30,7 @@ public class TimeSwitchManager : MonoBehaviour
     void Update()
     {
         timeSwapCooldown -= Time.deltaTime;
-        timeSwapCooldown = Mathf.Clamp(timeSwapCooldown, 0f, 5f);
-        cooldownTimerText.text = timeSwapCooldown.ToString("0");
-        float percent = timeSwapCooldown / 5f;
-        percent = 1f - percent;
-        cooldownImage.fillAmount = percent;
+        timeSwapCooldown = Mathf.Clamp(timeSwapCooldown, 0f, 1f);
 
         if (Input.GetKeyDown(swapTimeKeybind) &&  timeSwapCooldown <= 0f)
 		{
@@ -46,13 +40,13 @@ public class TimeSwitchManager : MonoBehaviour
                     pastObject.SetActive(false);
                     presentObject.SetActive(true);
                     currentTime = CurrentTime.Present;
-                    timeSwapCooldown = 5f;
+                    timeSwapCooldown = 1f;
                     break;
                 case CurrentTime.Present:
                     pastObject.SetActive(true);
                     presentObject.SetActive(false);
                     currentTime = CurrentTime.Past;
-                    timeSwapCooldown = 5f;
+                    timeSwapCooldown = 1f;
                     break;
                 default:
                     break;

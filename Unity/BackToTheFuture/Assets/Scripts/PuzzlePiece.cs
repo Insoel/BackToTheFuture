@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class PuzzlePiece : MonoBehaviour
+public class PuzzlePiece : MonoBehaviour, IInteractableDialogue
 {
 	[SerializeField] private Color interactColor = default;
+	[SerializeField] private string dialogue;
 
     private bool hasBeenInteracted = false;
 
@@ -11,7 +13,12 @@ public class PuzzlePiece : MonoBehaviour
 
 	private SpriteRenderer sprite;
 
-    public bool HasBeenInteracted
+	public event Action<string, GameObject> OnInteraction;
+	public event Action OnStopInteraction;
+
+	public string Dialogue { get => dialogue; }
+
+	public bool HasBeenInteracted
 	{
         get => hasBeenInteracted;
 
@@ -37,6 +44,7 @@ public class PuzzlePiece : MonoBehaviour
 		if (collision.CompareTag("Player"))
 		{
 			sprite.color = interactColor;
+			OnInteraction?.Invoke(Dialogue, collision.gameObject);
 		}
 	}
 
@@ -45,6 +53,7 @@ public class PuzzlePiece : MonoBehaviour
 		if (collision.CompareTag("Player"))
 		{
 			sprite.color = originalColor;
+			OnStopInteraction?.Invoke();
 		}
 	}
 }
