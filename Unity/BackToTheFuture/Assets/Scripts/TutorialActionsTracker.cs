@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TutorialActionsTracker : MonoBehaviour
 {
@@ -20,6 +21,10 @@ public class TutorialActionsTracker : MonoBehaviour
     [SerializeField] private PuzzlePiece woodPuzzpePiece = default;
 
     [SerializeField] private PuzzlePiece gearPuzzlePiece = default;
+
+    [SerializeField] private GameObject victoryPanel = default;
+
+    [SerializeField] private string nextLevelName;
 
     [SerializeField] private List<Dialogue> dialogueOptions = new List<Dialogue>();
 
@@ -48,6 +53,7 @@ public class TutorialActionsTracker : MonoBehaviour
         lastPos = marty.transform.position;
         timeSwitchManager.enabled = false;
         marty.enabled = false;
+        victoryPanel.SetActive(false);
         LeanTween.rotateAroundLocal(gearPuzzlePiece.gameObject, Vector3.forward, 360f, 5f).setLoopClamp();
     }
 
@@ -173,10 +179,16 @@ public class TutorialActionsTracker : MonoBehaviour
         gearPuzzlePiece.OnActionInteraction -= TutorialCompleted;
     }
 
+    public void LoadNextLevel()
+	{
+        SceneManager.LoadScene(nextLevelName);
+	}
+
     IEnumerator TutorialCompletedCoroutine()
 	{
+        timeSwitchManager.enabled = false;
+        marty.enabled = false;
         yield return new WaitForSeconds(5f);
-        // Load victory screen
-        Debug.Log("Tutorial Finished!!!!");
+        victoryPanel.SetActive(true);
 	}
 }
