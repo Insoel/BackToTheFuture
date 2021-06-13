@@ -70,9 +70,7 @@ public class DialogueManager : MonoBehaviour
     }
 
 	public void TriggerDialogue(Dialogue dialogue, GameObject player)
-	{
-        Debug.Log("Dialogue Triggered");
-        
+	{   
         switch(dialogue.dialogueType)
 		{
             case DialogueType.ChatBubble:

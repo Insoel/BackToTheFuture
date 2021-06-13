@@ -11,9 +11,15 @@ public class TutorialActionsTracker : MonoBehaviour
 
     [SerializeField] private float distanceToMove = 10f;
 
-    [SerializeField] InteractableObject treeInteractableObject = default;
+    [SerializeField] private InteractableObject treeInteractableObject = default;
 
-    [SerializeField] PuzzlePiece saplingPuzzlePiece = default;
+    [SerializeField] private PuzzlePiece saplingPuzzlePiece = default;
+
+    [SerializeField] private InteractableObject bridgeGapObject = default;
+
+    [SerializeField] private PuzzlePiece woodPuzzpePiece = default;
+
+    [SerializeField] private PuzzlePiece gearPuzzlePiece = default;
 
     [SerializeField] private List<Dialogue> dialogueOptions = new List<Dialogue>();
 
@@ -29,15 +35,20 @@ public class TutorialActionsTracker : MonoBehaviour
 
     private bool removedSapling = false;
 
+    private bool foundGap = false;
+
+    private bool woodSent = false;
+
+    private bool gearCollected = false;
+
 	// Start is called before the first frame update
 	void Start()
     {
-        dialogueManager.TriggerDialogue(dialogueOptions[0], null);
-        dialogueCounter++;
-        dialogueCooldown = 1f;
+        NextDialogue();
         lastPos = marty.transform.position;
         timeSwitchManager.enabled = false;
         marty.enabled = false;
+        LeanTween.rotateAroundLocal(gearPuzzlePiece.gameObject, Vector3.forward, 360f, 5f).setLoopClamp();
     }
 
     // Update is called once per frame
@@ -53,47 +64,35 @@ public class TutorialActionsTracker : MonoBehaviour
         if (dialogueManager.IsWriting || dialogueCooldown > 0f) return;
         if (dialogueCounter == 1)
 		{
-            dialogueManager.TriggerDialogue(dialogueOptions[dialogueCounter], null);
-            dialogueCounter++;
-            dialogueCooldown = 1f;
+            NextDialogue();
             marty.enabled = true;
         }
         else if (dialogueCounter == 2 && distanceMoved >= distanceToMove)
 		{
-            dialogueManager.TriggerDialogue(dialogueOptions[dialogueCounter], null);
-            dialogueCounter++;
-            dialogueCooldown = 1f;
+            NextDialogue();
             marty.enabled = false;
 
         }
         else if (dialogueCounter == 3)
 		{
-            dialogueManager.TriggerDialogue(dialogueOptions[dialogueCounter], null);
-            dialogueCounter++;
-            dialogueCooldown = 1f;
+            NextDialogue();
         }
         else if (dialogueCounter == 4)
 		{
-            dialogueManager.TriggerDialogue(dialogueOptions[dialogueCounter], null);
-            dialogueCounter++;
-            dialogueCooldown = 1f;
+            NextDialogue();
             timeSwitchManager.enabled = true;
             
             timeSwitchManager.OnTimeSwap += TimeSwapTrack;
         }
         else if (dialogueCounter == 5 && usedTimeSwap)
 		{
-            dialogueManager.TriggerDialogue(dialogueOptions[dialogueCounter], null);
-            dialogueCounter++;
-            dialogueCooldown = 1f;
+            NextDialogue();
             timeSwitchManager.enabled = false;
             treeInteractableObject.OnInteraction += TreeFoundTrack;
         }
         else if (dialogueCounter == 6 && foundTree)
 		{
-            dialogueManager.TriggerDialogue(dialogueOptions[dialogueCounter], null);
-            dialogueCounter++;
-            dialogueCooldown = 1f;
+            NextDialogue();
             timeSwitchManager.enabled = true;
             usedTimeSwap = false;
             timeSwitchManager.OnTimeSwap += TimeSwapTrack;
@@ -101,20 +100,40 @@ public class TutorialActionsTracker : MonoBehaviour
         else if (dialogueCounter == 7 && usedTimeSwap)
 		{
             treeInteractableObject.gameObject.SetActive(false);
-            dialogueManager.TriggerDialogue(dialogueOptions[dialogueCounter], null);
-            dialogueCounter++;
-            dialogueCooldown = 1f;
+            NextDialogue();
             marty.enabled = true;
             saplingPuzzlePiece.OnActionInteraction += SaplingRemoved;
+            timeSwitchManager.enabled = false;
         }
         else if (dialogueCounter == 8 && removedSapling)
 		{
             saplingPuzzlePiece.gameObject.SetActive(false);
-            dialogueManager.TriggerDialogue(dialogueOptions[dialogueCounter], null);
-            dialogueCounter++;
-            dialogueCooldown = 1f;
-            
+            NextDialogue();
+            bridgeGapObject.OnInteraction += GapFound;
         }
+        else if (dialogueCounter == 9 && foundGap)
+		{
+            NextDialogue();
+            woodPuzzpePiece.OnActionInteraction += BridgePlacingEnabled;
+        }
+        else if (dialogueCounter == 10 && woodSent)
+		{
+            bridgeGapObject.gameObject.SetActive(false);
+            woodSent = false;
+            gearPuzzlePiece.OnActionInteraction += TutorialCompleted;
+		}
+        else if (dialogueCounter == 10 && gearCollected)
+		{
+            NextDialogue();
+            StartCoroutine(TutorialCompletedCoroutine());
+		}
+    }
+
+    private void NextDialogue()
+	{
+        dialogueManager.TriggerDialogue(dialogueOptions[dialogueCounter], null);
+        dialogueCounter++;
+        dialogueCooldown = 1f;
     }
 
     private void TimeSwapTrack()
@@ -134,4 +153,30 @@ public class TutorialActionsTracker : MonoBehaviour
         removedSapling = true;
         saplingPuzzlePiece.OnActionInteraction -= SaplingRemoved;
     }
+
+    private void GapFound(Dialogue dialog, GameObject go)
+	{
+        foundGap = true;
+        timeSwitchManager.enabled = true;
+        bridgeGapObject.OnInteraction -= GapFound;
+    }
+
+    private void BridgePlacingEnabled()
+	{
+        woodSent = true;
+        woodPuzzpePiece.OnActionInteraction -= BridgePlacingEnabled;
+    }
+
+    private void TutorialCompleted()
+	{
+        gearCollected = true;
+        gearPuzzlePiece.OnActionInteraction -= TutorialCompleted;
+    }
+
+    IEnumerator TutorialCompletedCoroutine()
+	{
+        yield return new WaitForSeconds(5f);
+        // Load victory screen
+        Debug.Log("Tutorial Finished!!!!");
+	}
 }
