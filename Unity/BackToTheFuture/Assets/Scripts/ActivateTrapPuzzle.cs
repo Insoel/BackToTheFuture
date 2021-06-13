@@ -14,5 +14,6 @@ public class ActivateTrapPuzzle : Puzzle
 		ropeJoint.connectedBody = null;
 		LeanTween.rotateAroundLocal(gearPiece, Vector3.forward, 360f, 5f).setLoopClamp();
 		LeanTween.move(gearPiece, gearPiece.transform.position + new Vector3(3f, 0f, 0f), 1f);
+		gearPiece.transform.GetChild(0).gameObject.SetActive(false);
 	}
 }
