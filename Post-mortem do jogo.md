@@ -22,4 +22,4 @@ Outra coisa que também aprendemos foi que, à medida que fomos fazendo as coisa
 
 ## Opinião e retrospectiva do aconteceu durante o trabalho 
 
-Leonor: Confesso que poderia ter feito mais. Apesar do trabalho ter corrido, acho que poderia ter feito mais. Melhor arte. Podia ter dado mais ideias e ter ajudado no código.
+O grupo achou que o trabalho correu bem apesar de todas as ideias que tinhamos, não foram introduzidas devido à falta de tempo. Provavelmente o grupo poderá ter sido demasiado ambicioso ou então houve uma falta de planeamento que irá ser corrigida nos próximos projectos.
